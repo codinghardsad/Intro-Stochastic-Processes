@@ -1,0 +1,34 @@
+---
+title: "chapter1sim"
+format: pdf
+editor: visual
+---
+
+## Chapter 1 Simulations
+
+Focus on Markov Chains and Ergodicity -\> Steady-State Heavy
+
+## 1.6 Computations in R
+
+### Necessary Packages:
+
+```{r}
+library(diagram)
+suppressWarnings(library(expm)) 
+library(markovchain)
+```
+
+### Simple Practice:
+
+Transition Matrix and Diagram:
+
+```{r}
+# creating transition matrix:
+MatTM <- matrix(c(0.4, 0.2, 0.4, 0.7, 0.1, 0.2, 0.2, 0.5, 0.3), nrow=3, ncol=3, byrow=T)
+
+# plotting diagram of transitions:
+TrMatTM <- t(MatTM)
+plotmat(TrMatTM, pos = c(1,2), arr.col='green', arr.length = 1, arr.pos = 0.6, arr.width = 0.1, box.col='cyan', box.size = 0.1, self.cex = 0.3, self.shifty = 0.1)
+```
+
+Initial Vector and N-Step Distribution
