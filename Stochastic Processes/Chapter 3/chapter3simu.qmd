@@ -1,0 +1,115 @@
+---
+title: "chapter3simu"
+format: pdf
+editor: visual
+---
+
+## Chapter 3 Simulations
+
+Focus on Simulations and Expectations of Poisson Processes
+
+## 3.2 Simulations in R
+
+### Necessary Packages:
+
+```{r}
+library(diagram)  
+suppressWarnings(library(expm))   
+library(markovchain)
+```
+
+### Simulation 3.1: Exponential Interarrivals
+
+Using inverse of the cdf of standard uniform variables to get exp random variables with the correct mean.
+
+```{r}
+ #specifying parameters
+ lambda<- 2
+ njumps<- 20
+ #defining states
+ N<- 0:njumps
+ #setting timeas vector
+ time<- c()
+ #setting initialvalue fortime
+ time[1]<- 0
+ #specifying seed
+ set.seed(333422)
+ #simulating trajectory
+ for (i in 2:(njumps+1))
+ time[i]<- time[i-1]+round((-1/lambda)*log(runif(1)),2)
+ #plotting trajectory
+ #type="n"draws emptyframewithnograph
+ plot(time, N,type="n", xlab="Time",ylab="State", panel.first
+ =grid())
+ segments(time[-length(time)], N[-length(time)],time[-1]-0.07,
+ N[-length(time)], lwd=2,col="blue")
+ points(time, N,pch=20, col="blue")
+ points(time[-1], N[-length(time)],pch=1, col="blue")
+```
+
+### Simulation 3.2: Uniform Order Statistics
+
+Simulating waiting times:
+
+1\) Fix t and generate N(t) -\> Pois( $\lambda$ t)
+
+2\) Generate N(t) standard uniform random variables $U_1 , ... , U_{N(t)}$
+
+3\) Order $U_1 , ... , U_{N(t)}$ in increasing order to get ordered set $O_{N(t)}$
+
+4\) Multiply ordered set by t to obtain set of event times $S_1 = t*O_{N(t)}$
+
+5\) Define states of Poisson Process as: N(0) = 0, $N(S_1) = 1$, ... $N(S_{N(t)}) = N(t)$
+
+6\) Plot states against time
+
+```{r}
+#specifying parameters
+ t<- 10
+ lambda<- 2
+ #specifying seed
+ set.seed(32114)
+ #generating N(t)
+ njumps<- rpois(1,lambda*t)
+ #defining states
+ N<- 0:njumps
+ #generating N(t)standard uniforms
+ u<- c()
+ u[1]<- 0
+ for(i in 2:(njumps+1))
+ u[i]<- runif(1)
+ #computing eventtimes
+ time<- t*sort(u)
+ #plotting trajectory
+ plot(time, N,type="n", xlab="Time",ylab="State", panel.first
+ =grid())
+ segments(time[-length(time)], N[-length(time)],time[-1]-0.07,
+ N[-length(time)], lwd=2,col="blue")
+ points(time, N,pch=20, col="blue")
+ points(time[-1], N[-length(time)],pch=1, col="blue")
+```
+
+## 3.3 Applications of Poisson Process
+
+### Application 3.1: Seismology
+
+Occurrences of earthquakes can be modeled by poisson processes:
+
+(missing the file)
+
+```{r}
+eq.data<- read.csv(file="./earthquakedata2012-2018.csv",
+ header=TRUE, sep=",")
+ #creating date-time variable
+ datetime<- as.POSIXct(paste(as.Date(eq.data$DATE), eq.data$TIME))
+ #computing lag
+ datetime.lag<- c(0,head(datetime,-1))
+ #computing interarrival times (in hours)
+ int.time<- (as.numeric(datetime)-as.numeric(datetime.lag))/3600
+ #removing first value
+ int.time<- int.time[-1]
+ #removing immediate aftershocks (within 3 hours)
+ int<- int.time[int.time>3]
+ #plotting histogram
+ hist(int, main="", col="dark magenta", xlab="Interarrival Time")
+```

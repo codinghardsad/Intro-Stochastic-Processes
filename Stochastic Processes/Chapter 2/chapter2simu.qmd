@@ -8,7 +8,7 @@ editor: visual
 
 ## Chapter 2 Simulations
 
-Focus on Simple Random Walks - Simulations and
+Focus on Simple Random Walks - Simulations and Examples
 
 ## 2.3 Computations in R
 
